@@ -205,6 +205,21 @@ ADMINS = [
     ('Nomadicode Dev Team', 'dev@nomadicode.com'),
 ]
 MANAGERS = ADMINS
+
+
+# region EMAIL CONFIGURATION
+EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
+
+# SPARKPOST
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.sparkpostmail.com'
+# EMAIL_USE_TLS = True
+# EMAIL_PORT = 587
+# EMAIL_HOST_USER = 'SMTP_Injection'
+# EMAIL_HOST_PASSWORD = env('DJANGO_SPARKPOST_API_KEY', default="")
+# DEFAULT_FROM_EMAIL = env('DJANGO_FROM_EMAIL', default="")
+# endregion
+
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
