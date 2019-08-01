@@ -29,4 +29,4 @@ services:
     image: postgres:10-alpine
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    env_file: ./env
+    env_file: ./.env
