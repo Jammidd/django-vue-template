@@ -1,7 +1,8 @@
 version: '3.3'
 
 volumes:
-  postgres_data: {}
+  postgres_data_dev: {}
+  postgres_backup_dev: {}
 
 services:
   api:
@@ -11,7 +12,7 @@ services:
       - postgres
     volumes:
       - ./backend:/app
-    command: /start.sh
+    command: /start-dev.sh
     entrypoint: /entrypoint.sh
     restart: on-failure
     env_file: .env
