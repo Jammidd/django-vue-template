@@ -21,16 +21,16 @@ from django.views.generic import TemplateView
 from django.views import defaults as default_views
 
 urlpatterns = [
-    path(settings.ADMIN_URL, admin.site.urls),
+    url(settings.ADMIN_URL, admin.site.urls),
 
     # User management
-    url(r'^users/', include(('{{ cookiecutter.project_slug }}.users.urls', 'users'), namespace='users')),
-    url(r'^accounts/', include('allauth.urls')),{% if cookiecutter.use_drf_registration == 'y' %}
-    url(
-        regex=r'^rest-auth/registration/account-confirm-email/(?P<key>[-:\w]+)/$',
-        view=confirm_email,
-        name="account_confirm_email"
-    ),
-    url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
-    url(r'^rest-auth/', include('rest_auth.urls')),{% endif %}
+    url(r'^users/', include(('users.urls', 'users'), namespace='users')),
+    url(r'^accounts/', include('allauth.urls')),
+    # url(
+    #     regex=r'^rest-auth/registration/account-confirm-email/(?P<key>[-:\w]+)/$',
+    #     view=confirm_email,
+    #     name="account_confirm_email"
+    # ),
+    # url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
+    # url(r'^rest-auth/', include('rest_auth.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
