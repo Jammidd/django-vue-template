@@ -9,13 +9,11 @@ https://docs.djangoproject.com/en/2.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
+
 import os
+import datetime
 import environ
-from datetime import timedelta
 
-ROOT_DIR = environ.Path(__file__) - 2
-
-# Load operating system environment variables and then prepare to use them
 env = environ.Env()
 ROOT_DIR = environ.Path(__file__) - 2
 
@@ -33,18 +31,16 @@ if READ_DOT_ENV_FILE:
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env.str('SECRET_KEY')
+SECRET_KEY = env('DJANGO_SECRET_KEY', default='14e&t7z^=u&eeub-oqw#z6@hepcv5dpjew2gup1si(onve^1r3')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG', default=True)
 
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['*'])
-DOMAIN = env.str('DOMAIN')
+ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -53,20 +49,19 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # 'allauth',
-    # 'allauth.socialaccount',
-    # 'allauth.account',
+    'allauth',
+    'allauth.socialaccount',
+    'allauth.account',
 
+    'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
-
-    'corsheaders',
-
-    'api',
+    'api'
 ]
 
 MIDDLEWARE = [
@@ -87,7 +82,9 @@ ROOT_URLCONF = 'backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates/'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -111,9 +108,11 @@ PASSWORD_HASHERS = [
 ]
 
 # Database
+# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': env('POSTGRES_DB', default=""),
         'USER': env('POSTGRES_USER', default=""),
         'PASSWORD': env('POSTGRES_PASSWORD', default=""),
@@ -141,6 +140,61 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# region AUTHENTICATION
+# AUTHENTICATION CONFIGURATION
+# ------------------------------------------------------------------------------
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    )
+}
+
+OLD_PASSWORD_FIELD_ENABLED = True
+REST_USE_JWT = True
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=30),
+    'JWT_ALLOW_REFRESH': True,
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=30),
+}
+
+REST_AUTH_REGISTER_SERIALIZERS = {
+    'REGISTER_SERIALIZER': 'users.serializers.RegisterSerializer',
+}
+
+REST_AUTH_SERIALIZERS = {
+    'USER_DETAILS_SERIALIZER': ('users.serializers.'
+                                'UserDetailsSerializer')
+}
+
+REST_SESSION_LOGIN = False
+
+# Uncomment if using GraphQL
+
+# GRAPHENE = {
+#     'SCHEMA': 'api.schema.schema'
+# }
+
+# Some really nice defaults
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_EMAIL_VERIFICATION = 'optional'
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_USER_MODEL_EMAIL_FIELD = 'email'
+
+ACCOUNT_ALLOW_REGISTRATION = True
+
+# endregion
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
@@ -155,6 +209,7 @@ USE_L10N = True
 
 USE_TZ = True
 
+SITE_ID = 1
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
