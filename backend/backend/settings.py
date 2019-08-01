@@ -193,9 +193,16 @@ ACCOUNT_USER_MODEL_EMAIL_FIELD = 'email'
 
 ACCOUNT_ALLOW_REGISTRATION = True
 
+AUTH_USER_MODEL = 'users.User'
+LOGIN_URL = 'account_login'
 # endregion
 
+ADMIN_URL = r'^d-admin/'
 
+ADMINS = [
+    ('Nomadicode Dev Team', 'dev@nomadicode.com'),
+]
+MANAGERS = ADMINS
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
