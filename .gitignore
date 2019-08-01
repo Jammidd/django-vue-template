@@ -1,0 +1,23 @@
+.DS_Store
+node_modules/
+/dist/
+/www/
+/platforms/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+/test/unit/coverage/
+
+package-lock.json
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+media/
+*.pyc
+__pycache__/
