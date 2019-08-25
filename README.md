@@ -12,6 +12,10 @@ git remote set-url origin git://new.url.here
 ### Configuration
 
 - Update .env file (/compose/local/.env & /compose/production/.env)
+- Launch with:
+  ```
+  docker-compose up
+  ```
 
 
 ## Authors
